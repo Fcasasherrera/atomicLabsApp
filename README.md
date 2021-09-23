@@ -1,4 +1,4 @@
-[![Imgur](https://imgur.com/XdA5Cue)](https://github.com/Fcasasherrera)
+[![Imgur](https://i.imgur.com/XdA5Cue.png?1)](https://github.com/Fcasasherrera)
 
 
 # :space_invader: This aplication was maded by Fernando Casas
