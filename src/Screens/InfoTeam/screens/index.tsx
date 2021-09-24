@@ -95,7 +95,7 @@ export const InfoTeamScreen = ({ navigation }) => {
                         <Label>Quiero saber más</Label>
                         <Image source={require('../../../assets/images/1.png')} />
                         <Row style={{marginTop: 48, paddingHorizontal: 44}}>
-                            <Button height={'64'} isLoading={loading} onClick={() => {}}>
+                            <Button height={'64'} isLoading={loading} onClick={() => {navigation.push('Form')}}>
                                 <Label bold color={colors.accent}>¡Quiero Ser Parte!</Label>
                             </Button>
                         </Row>
@@ -123,7 +123,7 @@ export const InfoTeamScreen = ({ navigation }) => {
                         </>
                         <Image source={require('../../../assets/images/5.png')} />
                         <Row style={{ marginTop: 48, paddingHorizontal: 44 }}>
-                            <Button height={'64'} isLoading={loading} onClick={() => {}}>
+                            <Button height={'64'} isLoading={loading} onClick={() => { navigation.push('Form')}}>
                                 <Label bold color={colors.accent}>¡Quiero Ser Parte!</Label>
                             </Button>
                         </Row>
@@ -163,12 +163,6 @@ const Image = styled.Image`
   margin-top: 20px;
   width: 100%;
   height: 250px;
-  resize-mode: contain;
-`;
-const ProfileImage = styled.Image`
-  margin-bottom: 35px;
-  width: 100%;
-  height: 150px;
   resize-mode: contain;
 `;
 
@@ -224,16 +218,6 @@ const Row = styled.View<ContainerProps>`
     flex-direction: row;
     justify-content: center;
 `
-const BottomBox = styled(Animated.View) <ContainerProps>`
-    align-items: center;
-    justify-content: flex-start;
-    display: flex;
-    width: 100%;
-    height: 20%;
-    padding-right: 20px;
-    padding-left: 20px;
-    padding-top: 80px;
-`
 const Icon = styled(BaseIcon) <{ isValid: boolean }>`
   color: ${props => (props.isValid ? colors.primary : colors.gray)};
   margin-left: 12px;
@@ -243,19 +227,6 @@ const SimpleIcon = styled(BaseSimpleIcon) <{ isValid: boolean, disableMargin: bo
   margin-left: ${props => props.disableMargin ? '0' : '12'}px;
 `;
 
-const InputBox = styled(Animated.View) <ContainerProps>`
-    height: 40px;
-    width: 100%;
-    border-radius: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    align-items: center;
-    justify-content: space-around;
-    display: flex;
-    flex-direction: row;
-    border-bottom-color: white;
-    border-bottom-width: 1px;
-`
 const RoundedButton = styled.TouchableOpacity`
     background-color: white;
     padding: 16px;

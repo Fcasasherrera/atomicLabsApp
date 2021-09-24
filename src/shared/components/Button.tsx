@@ -8,6 +8,7 @@ type ButtonProps = {
     secondary?: boolean;
     accent?: boolean;
     isActivated?: boolean;
+    rounded?: boolean;
     onClick: any;
     width?: string;
     height?: string;
@@ -25,11 +26,13 @@ export const Button: React.FC<ButtonProps> = ({
     width,
     height,
     isActivated = true,
+    rounded = false,
     margin,
 }) => {
     return !isLoading && isActivated ? (
         <ButtonContainer
             outline={outline}
+            rounded={rounded}
             onPress={onClick}
             secondary={secondary}
             width={width}
@@ -52,7 +55,7 @@ export const Button: React.FC<ButtonProps> = ({
                 {isActivated ? (
                     <DotIndicator color={colors.primary} size={10} count={3} />
                 ) : (
-                        <Label>{children}</Label>
+                        <Label isActivated={isActivated}>{children}</Label>
                     )}
             </ButtonDeactivaded>
         );
@@ -63,13 +66,14 @@ type StyleProps = {
     width?: string;
     height?: string;
     outline: boolean;
+    rounded?: boolean;
     secondary: boolean;
     accent: boolean;
     isActivated: boolean;
 };
 
 const Label = styled.Text<StyleProps>`
-  color: ${props => (!props.outline ? colors.accent : colors.white)};
+  color: ${props => (props.accent ? colors.accent : props.isActivated ? colors.whiteLight : colors.white)};
   align-self: center;
   padding: 10px;
 `;
@@ -77,17 +81,17 @@ const Label = styled.Text<StyleProps>`
 const BaseButtonStyles = `
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
   margin-top: 5px;
 `;
 
 const ButtonContainer = styled.TouchableOpacity<StyleProps>`
   ${BaseButtonStyles}
+  border-radius: ${props => props.rounded ? '150' :'20'}px;
   width: ${props => (props.width ? props.width : '100%')};
   height: ${props => (props.height ? props.height : '40')}px;
   background-color: ${props =>
         props.accent
-            ? colors.accent
+            ? colors.primary
             : props.outline
                 ? colors.lightGray
                 : props.secondary
@@ -98,7 +102,8 @@ const ButtonContainer = styled.TouchableOpacity<StyleProps>`
 
 const ButtonDeactivaded = styled.View<StyleProps>`
   ${BaseButtonStyles}
-  background-color: ${colors.blackLigth};
+  border-radius: ${props => props.rounded ? '150' : '20'}px;
+  background-color: ${colors.primaryLigth};
   width: ${props => (props.width ? props.width : '100%')};
   ${props => props.isActivated && 'min-height: 40px;'}
 `;

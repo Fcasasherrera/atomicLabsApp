@@ -1,19 +1,19 @@
 import {Dimensions} from 'react-native';
 export const colors = {
-  primary: '#ed3237', /* color principal */
-  primaryLigth: '#434242', /* color secundario */
+  primary: '#ff4824', /* color principal */
+  primaryLigth: 'rgba(255, 72, 36, 0.5)', /* color secundario */
   primaryDark: '#2330d7',
   accent: '#006099',
   accentLight: '#ec4a4f',  /* color secundario -Seed */
   white: '#ffffff',
-  whiteDark: '#ebe8e8',
+  whiteLight: 'rgba(255, 255, 255, 0.1)',
   black: '#121212',
   blackLigth: '#c9c5c5',
   blackTransparent: 'rgba(0,0,0,0.8)',
   blackTransparentLight: 'rgba(0,0,0,0.3)',
   gray: '#cfd8dc',
   lightGray: '#eceff1',
-  error: 'rgba(221, 44, 0, 0.87)',
+  error: '#B00020',
   pink: '#fce4ec'
 };
 
