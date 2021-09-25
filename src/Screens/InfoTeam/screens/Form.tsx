@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import styled from 'styled-components/native';
-import { loginAdmin, registerAdmin } from 'shared/Api/index';
+import { register } from 'shared/Api/index';
 import Toast from 'react-native-simple-toast';
 import { Button } from 'shared/components';
 import { colors } from 'shared/styles';
@@ -15,6 +15,7 @@ export const FormScreen = ({ navigation }) => {
     const [stateAdmin, setStateAdmin] = useState({
         username: '',
         lastname: '',
+        phone: '',
         status: false,
         statusLength: false,
         countTimes: 0,
@@ -25,9 +26,9 @@ export const FormScreen = ({ navigation }) => {
     const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity: 0
     const [fadeAnimInput] = useState(new Animated.Value(0));
     const [loading, setLoading] = useState(false);
+    const [step, setStep] = useState(0);
 
     useEffect(() => {
-
         Animated.timing(fadeAnim, {
             toValue: 2,
             duration: 2000,
@@ -43,11 +44,11 @@ export const FormScreen = ({ navigation }) => {
             toValue: -20,
             useNativeDriver: true
         }).start();
-        showInputs()
+        showInputs(2)
     };
-    const showInputs = () => {
+    const showInputs = (show) => {
         Animated.timing(fadeAnimInput, {
-            toValue: 2,
+            toValue: show,
             duration: 1000,
             useNativeDriver: true
         }).start();
@@ -69,28 +70,43 @@ export const FormScreen = ({ navigation }) => {
         }
     }, [stateAdmin.username]);
 
-    const login = async () => {
+    useEffect(() => {
+        if (step) {
+            showInputs(0)
+        } else {
+            showInputs(2)
+        }
+    }, [step]);
+
+    const onRegister = async () => {
         let response: any = {}
         setLoading(true)
-        // try {
-        //     response = await loginAdmin(stateAdmin)
-        // } catch (error) {
-        //     setLoading(false)
-        // }
-
-        // if (!response.status) {
-        //     Toast.show('Datos no encontrados', Toast.SHORT);
-        //     setLoading(false)
-        // } else {
-        //     setLoading(false)
-        // }
-        navigation.replace('Start', response)
+        let data = {
+            firstname: stateAdmin.username,
+            lastname: stateAdmin.lastname,
+            cellphone: parseInt(stateAdmin.phone)
+        }
+        try {
+            response = await register(data)
+        } catch (error) {
+            Toast.show('Ocurrio un error intenta de nuevo', Toast.SHORT);
+            setLoading(false)
+        }
+        
+        if (!response.success) {   
+            Toast.show('Ocurrio un error intenta de nuevo', Toast.SHORT);
+            setLoading(false)
+        } else {
+            navigation.replace('Success', response)
+        }
     }
 
     return (
         <ImageBg source={require('../../../assets/bgImages/mobile.jpg')} resizeMode="cover">
             <ContainerScrollA>
                 <AnimatedView
+                    keyboardDismissMode='on-drag'
+                    keyboardShouldPersistTaps="always"
                     height={HEIGHT}
                     style={{
                         opacity: fadeAnim,
@@ -102,52 +118,94 @@ export const FormScreen = ({ navigation }) => {
                     }}>
                     <LogoImage source={require('../../../assets/brand/logo.png')} />
                     <Animated.View style={{
-                        opacity: fadeAnimInput,
+                        opacity: !step ? fadeAnimInput : 2,
                         paddingHorizontal: 20,
                     }}>
-                        <Progress />
-                        <Label>Queremos saber que eres tú por favor ingresa los siguientes datos: </Label>
-                    </Animated.View>
-                    <Animated.View style={{ opacity: fadeAnimInput, paddingHorizontal: 20,}}>
-                        <Label small>Nombre (s)</Label>
-                            <InputBox onErrorLengh={stateAdmin.statusLength}>
-                                <SimpleIcon
-                                    name={stateAdmin.status ? 'user' : 'user'}
-                                    size={18}
-                                    isValid={stateAdmin.status}
-                                    onErrorLengh={stateAdmin.statusLength}
-                                />
-                                <InputText
-                                    onChangeText={text => setStateAdmin({ ...stateAdmin, username: text })}
-                                    value={stateAdmin.username}
-                                    placeholder="Nombre (s)"
-                                />
-                            </InputBox>
-                        {stateAdmin.statusLength &&
-                            <Label small bold style={{ color: 'red' }}>El nombre deberá contener minimo 5 caracteres</Label>
+                        <Progress step={step}/>
+                        {step ? 
+                            <>
+                                <Label>Necesitamos validar tu número para continuar</Label>
+                                <Label>Ingresa tu número a 10 digitos y te enviaremos un codigo SMS.</Label>
+                            </>
+                        :
+                            <Label>Queremos saber que eres tú por favor ingresa los siguientes datos: </Label>
                         }
-                            <Label small>Apellidos</Label>
-                            <InputBox>
-                                <SimpleIcon
-                                    name={stateAdmin.status ? 'lock' : 'lock'}
-                                    size={18}
-                                    isValid={stateAdmin.status}
-                                />
-                                <InputText
-                                    onChangeText={text => {
-                                        setStateAdmin({ ...stateAdmin, lastname: text })
-                                    }}
-                                    value={stateAdmin.lastname}
-                                    placeholder="Apellidos"
-                                />
-                            </InputBox>
                     </Animated.View>
-                    <FormBox style={{ opacity: fadeAnimInput, marginTop: 12}}>
-                        <Button rounded isLoading={loading} height={'44'} isActivated={stateAdmin.status} onClick={login} accent>
-                            <Label bold>Enviar</Label>
-                        </Button>
-                    </FormBox>
-                    <Image style={{ opacity: fadeAnimInput, marginBottom: 25}} source={require('../../../assets/images/6.png')} />
+                        {
+                            !step ? 
+                                <>
+                                    <Animated.View style={{ opacity: fadeAnimInput, paddingHorizontal: 20, }}>
+                                        <Label small>Nombre (s)</Label>
+                                        <InputBox onErrorLengh={stateAdmin.statusLength}>
+                                            <SimpleIcon
+                                                name={stateAdmin.status ? 'user' : 'user'}
+                                                size={18}
+                                                isValid={stateAdmin.status}
+                                                onErrorLengh={stateAdmin.statusLength}
+                                            />
+                                            <InputText
+                                                onChangeText={text => setStateAdmin({ ...stateAdmin, username: text })}
+                                                value={stateAdmin.username}
+                                                placeholder="Nombre (s)"
+                                            />
+                                        </InputBox>
+                                        {stateAdmin.statusLength &&
+                                            <Label small bold style={{ color: 'red' }}>El nombre deberá contener minimo 5 caracteres</Label>
+                                        }
+                                        <Label small>Apellidos</Label>
+                                        <InputBox>
+                                            <SimpleIcon
+                                                name={stateAdmin.status ? 'lock' : 'lock'}
+                                                size={18}
+                                                isValid={stateAdmin.status}
+                                            />
+                                            <InputText
+                                                onChangeText={text => {
+                                                    setStateAdmin({ ...stateAdmin, lastname: text })
+                                                }}
+                                                value={stateAdmin.lastname}
+                                                placeholder="Apellidos"
+                                                keyboardType="number-pad"
+                                            />
+                                        </InputBox>
+                                    </Animated.View>
+                                    <FormBox style={{ opacity: fadeAnimInput, marginTop: 12 }}>
+                                        <Button rounded isLoading={loading} height={'44'} isActivated={stateAdmin.status && !stateAdmin.statusLength} onClick={() => { setStep(1) }} accent>
+                                            <Label bold>Continuar</Label>
+                                        </Button>
+                                    </FormBox>
+                                    <Image style={{ opacity: fadeAnimInput, marginBottom: 25 }} source={require('../../../assets/images/6.png')} />
+                                </>
+                            :
+                                <>
+                                    <Animated.View style={{ opacity: 2, paddingHorizontal: 20, }}>
+                                        {stateAdmin.statusLength &&
+                                            <Label small bold style={{ color: 'red' }}>El nombre deberá contener minimo 5 caracteres</Label>
+                                        }
+                                        <Label small>Número de Celular</Label>
+                                        <InputBox>
+                                            <SimpleIcon
+                                                name={stateAdmin.status ? 'phone' : 'phone'}
+                                                size={18}
+                                                isValid={stateAdmin.status}
+                                            />
+                                            <InputText
+                                                onChangeText={text => {
+                                                    setStateAdmin({ ...stateAdmin, phone: text })
+                                                }}
+                                                value={stateAdmin.phone}
+                                                placeholder="Número de Celular"
+                                            />
+                                        </InputBox>
+                                    </Animated.View>
+                                    <FormBox style={{ opacity: 2, marginTop: 12 }}>
+                                        <Button rounded isLoading={loading} height={'44'} isActivated={stateAdmin.status} onClick={onRegister} accent>
+                                            <Label bold>Enviar</Label>
+                                        </Button>
+                                    </FormBox>
+                                    <Image style={{ opacity: 2, marginBottom: 25 }} source={require('../../../assets/images/7.png')} />
+                                </>
+                        }
                     <Footer />
                 </AnimatedView>
             </ContainerScrollA>

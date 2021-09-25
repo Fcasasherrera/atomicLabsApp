@@ -1,14 +1,41 @@
 import { whileStatement } from '@babel/types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, Animated } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { colors } from 'shared/styles';
 import styled from 'styled-components/native';
 
 interface ProgressProps {
+    step: Number,
 }
 
 const Progress = (props: ProgressProps) => {
+    
+
+    const counter = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (props.step === 1) {
+            load(100)
+        } else {
+            load(50)
+        }
+    }, [props.step]);
+
+    const load = (count) => {
+        Animated.timing(counter, {
+            toValue: count,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+    };
+
+    const width = counter.interpolate({
+        inputRange: [50, 100],
+        outputRange: ["50%", "100%"],
+        extrapolate: "clamp"
+    })
+
 
     return (
         <>
@@ -16,22 +43,28 @@ const Progress = (props: ProgressProps) => {
                 <IconImg>
                     <Label bold>1</Label>
                 </IconImg>
-                <IconImg outline>
-                    <Label bold outline>2</Label>
+                <IconImg outline={props.step !== 1}>
+                    <Label bold outline={props.step !== 1}>2</Label>
                 </IconImg>
             </Row>
             <View style={styles.progressBar}>
-                <Animated.View style={[StyleSheet.absoluteFill, { borderRadius: 150, backgroundColor: colors.primary, width: "50%" }]} />
+                <Animated.View style={[StyleSheet.absoluteFill, { borderRadius: 150, backgroundColor: colors.primary, width }]} />
             </View>
             <Row>
                 <IconImg>
-                    <Label bold>1</Label>
+                    <Label bold>{!props.step ? 1 : 2}</Label>
                 </IconImg>
-
-                <Animated.View>
-                    <Title small bold>TE QUEREMOS</Title>
-                    <Title small bold color>CONOCER</Title>
-                </Animated.View>
+                {props.step ? 
+                    <Animated.View>
+                        <Title small bold>VALIDA TU</Title>
+                        <Title small bold color>CELULAR</Title>
+                    </Animated.View>
+                :
+                    <Animated.View>
+                        <Title small bold>TE QUEREMOS</Title>
+                        <Title small bold color>CONOCER</Title>
+                    </Animated.View>
+                }
             </Row>
         </>
     );
@@ -95,5 +128,5 @@ export const Row = styled.View<ContainerProps>`
     align-items: center;
     justify-content: space-around;
     margin-vertical: 12px;
-    margin-horizontal: 12px;
+    padding-horizontal: 12px;
 `
