@@ -1,13 +1,9 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { InfoTeamScreen } from '../Screens/InfoTeam/screens/index';
 import { FormScreen } from '../Screens/InfoTeam/screens/Form';
 import { SuccesScreen } from '../Screens/InfoTeam/screens/Success';
-
-
-import { View, Text, StatusBar } from 'react-native';
-import * as options from './options';
 
 
 const { Navigator, Screen } = createStackNavigator();

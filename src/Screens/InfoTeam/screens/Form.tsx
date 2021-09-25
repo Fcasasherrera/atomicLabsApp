@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 import { register } from 'shared/Api/index';
 import Toast from 'react-native-simple-toast';
 import { Button } from 'shared/components';
 import { colors } from 'shared/styles';
-import BaseIcon from 'react-native-vector-icons/Octicons';
 import BaseSimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import Footer from '../components/Footer';
-import Progress, { Label, Title } from '../components/Progress';
+import Progress, { Label } from '../components/Progress';
 
 const HEIGHT = 100
 export const FormScreen = ({ navigation }) => {

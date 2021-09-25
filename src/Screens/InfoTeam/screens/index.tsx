@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Animated, Text, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Animated, Text, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
-import { loginAdmin, registerAdmin } from 'shared/Api/index';
 import Toast from 'react-native-simple-toast';
 import { Button } from 'shared/components';
 import { colors } from 'shared/styles';
-import BaseIcon from 'react-native-vector-icons/Octicons';
 import BaseSimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import Carousel from '../components/Carousel';
 import ContainerListView from '../components/ContainerListView';
@@ -194,16 +192,6 @@ export const Label = styled.Text<TextProps>`
     ${props => props.bold ? 'font-weight: bold;' : ''}
     color: ${props => props.color ? props.color : 'white'};
 `
-const InputText = styled.TextInput.attrs((props) => ({
-    placeholderTextColor: 'white',
-}))`
-    height: 40px;
-    width: 80%;
-    border-radius: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    color: white;
-`
 const FormBox = styled(Animated.View) <ContainerProps>`
     width: 100%;
     padding-right: 16px;
@@ -218,10 +206,6 @@ const Row = styled.View<ContainerProps>`
     flex-direction: row;
     justify-content: center;
 `
-const Icon = styled(BaseIcon) <{ isValid: boolean }>`
-  color: ${props => (props.isValid ? colors.primary : colors.gray)};
-  margin-left: 12px;
-`;
 const SimpleIcon = styled(BaseSimpleIcon) <{ isValid: boolean, disableMargin: boolean }>`
   color: ${props => (props.isValid ? colors.black : colors.gray)};
   margin-left: ${props => props.disableMargin ? '0' : '12'}px;

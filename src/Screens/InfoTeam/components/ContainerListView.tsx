@@ -1,7 +1,5 @@
-import { whileStatement } from '@babel/types';
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 import { colors } from 'shared/styles';
 import styled from 'styled-components/native';
 
